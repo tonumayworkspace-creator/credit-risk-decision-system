@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual env
+venv/
+.env/
+
+# Logs
+api_logs.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data (optional if large)
+data/*.csv
