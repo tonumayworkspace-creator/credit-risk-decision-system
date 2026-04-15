@@ -3,9 +3,12 @@
 import streamlit as st
 import requests
 
-st.title("💳 Credit Risk Decision System")
+st.set_page_config(page_title="Credit Risk System", layout="centered")
 
-st.write("Enter customer details")
+st.title("💳 Credit Risk Decision System")
+st.caption("FinTech Risk Engine: PD + Expected Loss + Decision")
+
+st.divider()
 
 # Inputs
 loan_amnt = st.number_input("Loan Amount", 1000)
@@ -16,7 +19,9 @@ open_acc = st.number_input("Open Accounts", 0)
 total_acc = st.number_input("Total Accounts", 1)
 revol_bal = st.number_input("Revolving Balance", 0)
 
-if st.button("Predict"):
+st.divider()
+
+if st.button("🚀 Predict Risk"):
 
     data = {
         "loan_amnt": loan_amnt,
@@ -36,10 +41,29 @@ if st.button("Predict"):
 
         result = res.json()
 
-        st.success(f"Probability of Default: {result['probability_of_default']:.4f}")
-        st.warning(f"Expected Loss: ₹{result['expected_loss']:.2f}")
-        st.info(f"Risk Level: {result['risk_level']}")
-        st.error(f"Decision: {result['decision']}")
+        st.subheader("📊 Results")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.metric("Probability of Default", f"{result['probability_of_default']:.2f}")
+
+        with col2:
+            st.metric("Expected Loss", f"₹{result['expected_loss']:.0f}")
+
+        # Risk color
+        if result["risk_level"] == "Low Risk":
+            st.success(f"Risk Level: {result['risk_level']}")
+        elif result["risk_level"] == "Medium Risk":
+            st.warning(f"Risk Level: {result['risk_level']}")
+        else:
+            st.error(f"Risk Level: {result['risk_level']}")
+
+        # Decision highlight
+        if result["decision"] == "Approve":
+            st.success("✅ Loan Approved")
+        else:
+            st.error("❌ Loan Rejected")
 
     except:
-        st.error("API not running")
+        st.error("⚠️ Backend API not connected")
